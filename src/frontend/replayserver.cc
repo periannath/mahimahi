@@ -139,8 +139,9 @@ int main( void )
             return EXIT_SUCCESS;
         } else {                /* no acceptable matches for request */
             cout << "HTTP/1.1 404 Not Found" << CRLF;
-            cout << "Content-Type: text/plain" << CRLF << CRLF;
-            cout << "replayserver: could not find a match for " << request_line << CRLF;
+            cout << "Content-Length: 13" << CRLF;
+            cout << "Content-Type: text/plain; charset=utf-8" << CRLF << CRLF;
+            cout << "404 Not Found";
             return EXIT_FAILURE;
         }
     } catch ( const exception & e ) {
