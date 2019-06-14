@@ -1,5 +1,7 @@
 /* -*-mode:c++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
 
+#include <time.h>
+
 #include "http_message.hh"
 #include "exception.hh"
 #include "http_record.pb.h"
@@ -161,7 +163,16 @@ std::string HTTPMessage::str( void ) const
 
     /* iterate through headers and add "key: value\r\n" to request */
     for ( const auto & header : headers_ ) {
-        ret.append( header.str() + CRLF );
+        if ( !header.key().compare("Date") ) {
+          char buf[100];
+          time_t now = time(0);
+          struct tm tm = *gmtime(&now);
+          strftime(buf, sizeof buf, "%a, %d %b %Y %H:%M:%S %Z", &tm);
+          string time(buf);
+          ret.append( "Date: " + time + CRLF );
+        } else {
+          ret.append( header.str() + CRLF );
+        }
     }
 
     /* blank line between headers and body */
